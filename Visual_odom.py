@@ -175,6 +175,30 @@ class VisualOdometry():
 
 def main():
 
+    data_dirtr='KITTI_sequence_1'
+    vo=VisualOdometry(data_dirtr)
+
+
+    gt_path=[]
+    estimate_path=[]
+    for i,gt_pose in enumerate(tqdm(vo.gt_poses,unit="pose")):
+        if i==0 :
+            cur_pose=gt_pose
+
+        else:
+            q1,q2 = vo.get_matches(i)
+            transf= vo.get_pose(q1,q2)
+            cur_pose= np.matmul(cur_pose, np.linalg.inv(transf))
+            #gt_path.append((gt_pose[0,3],gt_pose[2,3]))
+            estimate_path.append((cur_pose[0,3],cur_pose[2,3]))
+
+    
+
+
+if __name__=="__main__":
+    main()
+
+
 
 
 
